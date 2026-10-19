@@ -1,7 +1,5 @@
 package net.luckyowlstudios.wardrobe.cosmetic;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -10,10 +8,8 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
 
 /** An item that can be worn in one of the player's cosmetic slots. Gives no protection, only looks. */
 public class CosmeticItem extends Item {
@@ -53,10 +49,5 @@ public class CosmeticItem extends Item {
         ItemStack toWear = player.isCreative() ? held.copy() : held.copyAndClear();
         cosmetics.setItem(slot.index(), toWear);
         return InteractionResultHolder.sidedSuccess(returned, level.isClientSide());
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("tooltip.luckys_wardrobe.cosmetic", slot.displayName()).withStyle(ChatFormatting.GRAY));
     }
 }

@@ -24,9 +24,9 @@ public class ModLanguageProvider extends LanguageProvider {
         add(slotKey(CosmeticSlot.SHIRT), "Shirt");
         add(slotKey(CosmeticSlot.PANTS), "Pants");
         add(slotKey(CosmeticSlot.SHOES), "Shoes");
-        add("tooltip.luckys_wardrobe.cosmetic", "Cosmetic: %s");
 
         add("container.luckys_wardrobe.wardrobe", "Wardrobe");
+        add("itemGroup.luckys_wardrobe.cosmetics", "Cosmetics");
         add("key.categories.luckys_wardrobe", "Lucky's Wardrobe");
         add("key.luckys_wardrobe.open_wardrobe", "Open Wardrobe");
     }

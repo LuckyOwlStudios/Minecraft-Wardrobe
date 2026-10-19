@@ -4,6 +4,7 @@ import net.luckyowlstudios.wardrobe.platform.services.IPlatformHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -33,5 +34,10 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     @Override
     public <T extends AbstractContainerMenu> MenuType<T> createMenuType(BiFunction<Integer, Inventory, T> factory) {
         return IMenuTypeExtension.create((containerId, inventory, extraData) -> factory.apply(containerId, inventory));
+    }
+
+    @Override
+    public CreativeModeTab.Builder creativeTabBuilder() {
+        return CreativeModeTab.builder();
     }
 }

@@ -9,7 +9,7 @@
   "item.luckys_wardrobe.white_pants": "White Pants",
   "item.luckys_wardrobe.white_shirt": "White Shirt",
   "item.luckys_wardrobe.white_shoes": "White Shoes",
+  "itemGroup.luckys_wardrobe.cosmetics": "Cosmetics",
   "key.categories.luckys_wardrobe": "Lucky's Wardrobe",
-  "key.luckys_wardrobe.open_wardrobe": "Open Wardrobe",
-  "tooltip.luckys_wardrobe.cosmetic": "Cosmetic: %s"
+  "key.luckys_wardrobe.open_wardrobe": "Open Wardrobe"
 }
