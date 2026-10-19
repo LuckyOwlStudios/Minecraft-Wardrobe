@@ -25,7 +25,8 @@ public final class ModItems {
     /** Called by each loader with its own way of registering an item. */
     public static void register(BiConsumer<ResourceLocation, Item> registrar) {
         HAT = cosmetic(registrar, "hat", CosmeticSlot.HAT,
-                CosmeticProperties.builder(CosmeticSlot.HAT).noSkinTexture().hideHeadOverlay().extraModel(Constants.id("hat")));
+                CosmeticProperties.builder(CosmeticSlot.HAT).noSkinTexture().hideHeadOverlay().extraModel(Constants.id("hat"))
+                        .liftOverHelmet(2.0F));
         WHITE_HAT = cosmetic(registrar, "white_hat", CosmeticSlot.HAT,
                 CosmeticProperties.builder(CosmeticSlot.HAT).hideHeadOverlay());
         WHITE_SHIRT = cosmetic(registrar, "white_shirt", CosmeticSlot.SHIRT,

@@ -44,6 +44,7 @@ CosmeticProperties.builder(CosmeticSlot.HAT)
         .slimVariant()                     // also ship <item>_slim.png for slim-armed skins
         .extraModel(Constants.id("hood"))  // render a registered extra model
         .noSkinTexture()                   // model-only cosmetic, nothing painted on the skin
+        .liftOverHelmet(2.0F)              // move the extra model's head up 2 px while a helmet is worn (leave out for hoods)
 ```
 
 Extra models are registered client side in `WardrobeClient.init()` with `CosmeticModels.register(id, layerDefinitionSupplier, texture[, dyeOverlayTexture])`. The optional dye overlay is tinted with the item's dye color, like leather armor; add the item to the `minecraft:dyeable` tag in `ModItemTagsProvider`. The brimmed `hat` is an example.
