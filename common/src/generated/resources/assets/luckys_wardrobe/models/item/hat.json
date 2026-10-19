@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "luckys_wardrobe:item/hat"
+    "layer0": "luckys_wardrobe:item/hat",
+    "layer1": "luckys_wardrobe:item/hat_dye_overlay"
   }
 }

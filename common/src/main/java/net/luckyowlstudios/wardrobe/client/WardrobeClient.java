@@ -12,6 +12,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
 import org.lwjgl.glfw.GLFW;
 
 /** Client-side behaviour shared by both loaders. Each loader registers the key mapping and calls in here. */
@@ -24,6 +26,11 @@ public final class WardrobeClient {
     public static void init() {
         CosmeticModels.register(Constants.id("hat"), HatModel::createBodyLayer,
                 Constants.id("textures/entity/hat.png"), Constants.id("textures/entity/hat_dye_overlay.png"));
+    }
+
+    /** Item tint for dyeable cosmetics: layer 1 (the dye overlay) takes the dye color, layer 0 stays untinted. */
+    public static int itemColor(ItemStack stack, int tintIndex) {
+        return tintIndex == 1 ? DyedItemColor.getOrDefault(stack, -1) : -1;
     }
 
     public static void onClientTick(Minecraft minecraft) {
