@@ -14,6 +14,7 @@ import net.neoforged.neoforge.common.NeoForge;
 public final class LuckysWardrobeClient {
 
     static void init(IEventBus modBus) {
+        WardrobeClient.init();
         modBus.addListener(LuckysWardrobeClient::onRegisterKeyMappings);
         modBus.addListener(LuckysWardrobeClient::onRegisterScreens);
         NeoForge.EVENT_BUS.addListener(LuckysWardrobeClient::onClientTick);

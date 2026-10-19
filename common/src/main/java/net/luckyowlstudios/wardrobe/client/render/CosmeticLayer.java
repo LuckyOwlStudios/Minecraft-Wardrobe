@@ -49,7 +49,7 @@ public class CosmeticLayer extends RenderLayer<AbstractClientPlayer, PlayerModel
                 model.renderToBuffer(poseStack, buffer.getBuffer(renderType), packedLight, overlay, -1);
             }
             for (ResourceLocation modelId : item.cosmetic().extraModels()) {
-                CosmeticModels.render(modelId, model, poseStack, buffer, packedLight, overlay);
+                CosmeticModels.render(modelId, stack, model, poseStack, buffer, packedLight, overlay);
             }
         }
         CosmeticRendering.restoreSkinLayers(model, skinLayers);

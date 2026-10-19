@@ -13,6 +13,9 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,6 +32,10 @@ import java.util.function.Supplier;
  * {@code right_arm}, {@code left_arm}, {@code right_leg} and {@code left_leg} (empty is fine; {@link #humanoidMesh()}
  * gives you all of them with the player's pivots). Then call {@link #register} from client setup and add the id to a
  * cosmetic with {@code CosmeticProperties.Builder#extraModel}.
+ *
+ * <p>A model can also have a dye overlay texture. It is drawn over the base texture, tinted with the item's dye color
+ * (or untinted when undyed), the same way leather armor works. Add the item to the {@code minecraft:dyeable} tag so
+ * it can be dyed in a crafting grid.
  */
 public final class CosmeticModels {
 
@@ -36,7 +43,12 @@ public final class CosmeticModels {
     private static final Set<ResourceLocation> WARNED = new HashSet<>();
 
     public static void register(ResourceLocation id, Supplier<LayerDefinition> layer, ResourceLocation texture) {
-        MODELS.put(id, new Entry(layer, texture));
+        register(id, layer, texture, null);
+    }
+
+    public static void register(ResourceLocation id, Supplier<LayerDefinition> layer, ResourceLocation texture,
+                                @Nullable ResourceLocation dyeOverlayTexture) {
+        MODELS.put(id, new Entry(layer, texture, dyeOverlayTexture));
     }
 
     /** A mesh with the empty humanoid parts every extra model needs, pivoted where the player's parts are. */
@@ -53,7 +65,7 @@ public final class CosmeticModels {
         return mesh;
     }
 
-    static void render(ResourceLocation id, PlayerModel<AbstractClientPlayer> parent, PoseStack poseStack,
+    static void render(ResourceLocation id, ItemStack stack, PlayerModel<AbstractClientPlayer> parent, PoseStack poseStack,
                        MultiBufferSource buffer, int packedLight, int overlay) {
         Entry entry = MODELS.get(id);
         if (entry == null) {
@@ -65,16 +77,23 @@ public final class CosmeticModels {
         HumanoidModel<AbstractClientPlayer> model = entry.model();
         parent.copyPropertiesTo(model);
         model.renderToBuffer(poseStack, buffer.getBuffer(RenderType.entityTranslucent(entry.texture)), packedLight, overlay, -1);
+        if (entry.dyeOverlayTexture != null) {
+            int color = DyedItemColor.getOrDefault(stack, -1);
+            model.renderToBuffer(poseStack, buffer.getBuffer(RenderType.entityTranslucent(entry.dyeOverlayTexture)), packedLight, overlay, color);
+        }
     }
 
     private static final class Entry {
         private final Supplier<LayerDefinition> layer;
         private final ResourceLocation texture;
+        @Nullable
+        private final ResourceLocation dyeOverlayTexture;
         private HumanoidModel<AbstractClientPlayer> model;
 
-        private Entry(Supplier<LayerDefinition> layer, ResourceLocation texture) {
+        private Entry(Supplier<LayerDefinition> layer, ResourceLocation texture, @Nullable ResourceLocation dyeOverlayTexture) {
             this.layer = layer;
             this.texture = texture;
+            this.dyeOverlayTexture = dyeOverlayTexture;
         }
 
         private HumanoidModel<AbstractClientPlayer> model() {

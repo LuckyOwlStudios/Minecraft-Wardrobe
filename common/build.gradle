@@ -34,8 +34,12 @@ configurations {
     }
 }
 
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
 artifacts {
     commonJava sourceSets.main.java.sourceDirectories.singleFile
-    commonResources sourceSets.main.resources.sourceDirectories.singleFile
+    commonResources file('src/main/resources')
+    // Written by NeoForge datagen (./gradlew :neoforge:runData), shipped by both loaders.
+    commonResources file('src/generated/resources')
 }
 

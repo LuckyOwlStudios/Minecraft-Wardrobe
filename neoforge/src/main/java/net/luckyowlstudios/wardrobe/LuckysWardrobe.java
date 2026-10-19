@@ -1,6 +1,7 @@
 package net.luckyowlstudios.wardrobe;
 
 import net.luckyowlstudios.wardrobe.client.WardrobeClient;
+import net.luckyowlstudios.wardrobe.datagen.WardrobeDataGenerators;
 import net.luckyowlstudios.wardrobe.network.OpenWardrobePayload;
 import net.luckyowlstudios.wardrobe.network.SyncCosmeticsPayload;
 import net.luckyowlstudios.wardrobe.network.WardrobeNetworking;
@@ -27,6 +28,7 @@ public class LuckysWardrobe {
         modBus.addListener(LuckysWardrobe::onRegister);
         modBus.addListener(LuckysWardrobe::onRegisterPayloads);
         modBus.addListener(LuckysWardrobe::onBuildCreativeTabs);
+        modBus.addListener(WardrobeDataGenerators::gatherData);
         if (FMLEnvironment.dist.isClient()) {
             LuckysWardrobeClient.init(modBus);
         }

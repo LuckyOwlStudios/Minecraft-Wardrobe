@@ -14,6 +14,7 @@ public class LuckysWardrobeClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        WardrobeClient.init();
         KeyBindingHelper.registerKeyBinding(WardrobeClient.OPEN_WARDROBE);
         ClientTickEvents.END_CLIENT_TICK.register(WardrobeClient::onClientTick);
         ClientPlayNetworking.registerGlobalReceiver(SyncCosmeticsPayload.TYPE,

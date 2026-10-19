@@ -16,6 +16,10 @@ Requires Java 21.
 - `./gradlew build` – jars land in `fabric/build/libs` and `neoforge/build/libs`.
 - `./gradlew :fabric:runClient` / `./gradlew :neoforge:runClient` – launch a dev client.
 - In IntelliJ IDEA: open the folder as a Gradle project; run configurations are generated on import.
+- `./gradlew :neoforge:runData` – regenerate lang, item models and tags (see Datagen).
+
+## Datagen
+Lang entries, item models and tags are generated, not hand-written. The providers live in `neoforge/src/main/java/.../datagen`, and they write to `common/src/generated/resources`, which both the Fabric and NeoForge jars include. After adding an item, add its name to `ModLanguageProvider`. Its item model comes from `textures/item/<item>.png` automatically. Then run `./gradlew :neoforge:runData` and commit the generated files.
 
 ## Cosmetics
 Every player gets four cosmetic slots: **hat, shirt, pants and shoes**. They give no protection, only looks.
@@ -42,5 +46,5 @@ CosmeticProperties.builder(CosmeticSlot.HAT)
         .noSkinTexture()                   // model-only cosmetic, nothing painted on the skin
 ```
 
-Extra models are registered client side with `CosmeticModels.register(id, layerDefinitionSupplier, texture)`.
+Extra models are registered client side in `WardrobeClient.init()` with `CosmeticModels.register(id, layerDefinitionSupplier, texture[, dyeOverlayTexture])`. The optional dye overlay is tinted with the item's dye color, like leather armor; add the item to the `minecraft:dyeable` tag in `ModItemTagsProvider`. The brimmed `hat` is an example.
 Export them from Blockbench as a Mojang-mapped Java entity model, with the parts `head`, `hat`, `body`, `right_arm`, `left_arm`, `right_leg` and `left_leg` (empty is fine). `CosmeticModels.humanoidMesh()` gives you all seven with the player's pivots.

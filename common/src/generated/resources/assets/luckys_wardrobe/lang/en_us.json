@@ -1,0 +1,15 @@
+{
+  "container.luckys_wardrobe.wardrobe": "Wardrobe",
+  "cosmetic_slot.luckys_wardrobe.hat": "Hat",
+  "cosmetic_slot.luckys_wardrobe.pants": "Pants",
+  "cosmetic_slot.luckys_wardrobe.shirt": "Shirt",
+  "cosmetic_slot.luckys_wardrobe.shoes": "Shoes",
+  "item.luckys_wardrobe.hat": "Hat",
+  "item.luckys_wardrobe.white_hat": "White Hat",
+  "item.luckys_wardrobe.white_pants": "White Pants",
+  "item.luckys_wardrobe.white_shirt": "White Shirt",
+  "item.luckys_wardrobe.white_shoes": "White Shoes",
+  "key.categories.luckys_wardrobe": "Lucky's Wardrobe",
+  "key.luckys_wardrobe.open_wardrobe": "Open Wardrobe",
+  "tooltip.luckys_wardrobe.cosmetic": "Cosmetic: %s"
+}

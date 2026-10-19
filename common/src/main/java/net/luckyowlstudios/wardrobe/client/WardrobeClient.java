@@ -1,6 +1,9 @@
 package net.luckyowlstudios.wardrobe.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.luckyowlstudios.wardrobe.Constants;
+import net.luckyowlstudios.wardrobe.client.model.HatModel;
+import net.luckyowlstudios.wardrobe.client.render.CosmeticModels;
 import net.luckyowlstudios.wardrobe.cosmetic.CosmeticHolder;
 import net.luckyowlstudios.wardrobe.network.OpenWardrobePayload;
 import net.luckyowlstudios.wardrobe.network.SyncCosmeticsPayload;
@@ -16,6 +19,12 @@ public final class WardrobeClient {
 
     public static final KeyMapping OPEN_WARDROBE = new KeyMapping("key.luckys_wardrobe.open_wardrobe",
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, "key.categories.luckys_wardrobe");
+
+    /** Called once from each loader's client setup. */
+    public static void init() {
+        CosmeticModels.register(Constants.id("hat"), HatModel::createBodyLayer,
+                Constants.id("textures/entity/hat.png"), Constants.id("textures/entity/hat_dye_overlay.png"));
+    }
 
     public static void onClientTick(Minecraft minecraft) {
         while (OPEN_WARDROBE.consumeClick()) {
