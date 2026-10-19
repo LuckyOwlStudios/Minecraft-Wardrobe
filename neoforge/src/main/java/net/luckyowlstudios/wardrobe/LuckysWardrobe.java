@@ -1,21 +1,55 @@
 package net.luckyowlstudios.wardrobe;
 
-
+import net.luckyowlstudios.wardrobe.client.WardrobeClient;
+import net.luckyowlstudios.wardrobe.network.OpenWardrobePayload;
+import net.luckyowlstudios.wardrobe.network.SyncCosmeticsPayload;
+import net.luckyowlstudios.wardrobe.network.WardrobeNetworking;
+import net.luckyowlstudios.wardrobe.registry.ModItems;
+import net.luckyowlstudios.wardrobe.registry.ModMenus;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 @Mod(Constants.MOD_ID)
 public class LuckysWardrobe {
 
-    public LuckysWardrobe(IEventBus eventBus) {
-
-        // This method is invoked by the NeoForge mod loader when it is ready
-        // to load your mod. You can access NeoForge and Common code in this
-        // project.
-
-        // Use NeoForge to bootstrap the Common mod.
-        Constants.LOG.info("Hello NeoForge world!");
+    public LuckysWardrobe(IEventBus modBus) {
         CommonClass.init();
 
+        modBus.addListener(LuckysWardrobe::onRegister);
+        modBus.addListener(LuckysWardrobe::onRegisterPayloads);
+        modBus.addListener(LuckysWardrobe::onBuildCreativeTabs);
+        if (FMLEnvironment.dist.isClient()) {
+            LuckysWardrobeClient.init(modBus);
+        }
+    }
+
+    private static void onRegister(RegisterEvent event) {
+        event.register(Registries.ITEM, helper -> ModItems.register(helper::register));
+        event.register(Registries.MENU, helper -> ModMenus.register(helper::register));
+    }
+
+    private static void onRegisterPayloads(RegisterPayloadHandlersEvent event) {
+        PayloadRegistrar registrar = event.registrar("1");
+        registrar.playToClient(SyncCosmeticsPayload.TYPE, SyncCosmeticsPayload.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(() -> WardrobeClient.handleSync(payload)));
+        registrar.playToServer(OpenWardrobePayload.TYPE, OpenWardrobePayload.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(() -> WardrobeNetworking.openWardrobe((ServerPlayer) context.player())));
+    }
+
+    private static void onBuildCreativeTabs(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.COMBAT) {
+            for (Item item : ModItems.ALL) {
+                event.accept(item);
+            }
+        }
     }
 }

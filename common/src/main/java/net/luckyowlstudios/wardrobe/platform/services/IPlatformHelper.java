@@ -1,5 +1,11 @@
 package net.luckyowlstudios.wardrobe.platform.services;
 
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+
+import java.util.function.BiFunction;
+
 public interface IPlatformHelper {
 
     /**
@@ -33,4 +39,10 @@ public interface IPlatformHelper {
 
         return isDevelopmentEnvironment() ? "development" : "production";
     }
+
+    /**
+     * Creates a simple menu type. Vanilla's MenuType constructor is only opened up by each loader's access
+     * transformer/widener, so it can't be called from common code.
+     */
+    <T extends AbstractContainerMenu> MenuType<T> createMenuType(BiFunction<Integer, Inventory, T> factory);
 }

@@ -3,14 +3,18 @@
   "minVersion": "0.8",
   "package": "net.luckyowlstudios.wardrobe.mixin",
   "refmap": "${mod_id}.refmap.json",
-  "compatibilityLevel": "JAVA_18",
-  "mixins": [],
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "PlayerListMixin",
+    "PlayerMixin",
+    "ServerEntityMixin",
+    "ServerPlayerMixin"
+  ],
   "client": [
-    "MixinMinecraft"
+    "client.PlayerRendererMixin"
   ],
   "server": [],
   "injectors": {
     "defaultRequire": 1
   }
 }
-
