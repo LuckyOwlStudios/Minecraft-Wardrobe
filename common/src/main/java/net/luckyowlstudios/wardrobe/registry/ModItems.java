@@ -16,6 +16,7 @@ public final class ModItems {
     /** Every item this mod adds, in creative tab order. */
     public static final List<Item> ALL = new ArrayList<>();
 
+    public static Item HAT;
     public static Item WHITE_HAT;
     public static Item WHITE_SHIRT;
     public static Item WHITE_PANTS;
@@ -23,6 +24,9 @@ public final class ModItems {
 
     /** Called by each loader with its own way of registering an item. */
     public static void register(BiConsumer<ResourceLocation, Item> registrar) {
+        HAT = cosmetic(registrar, "hat", CosmeticSlot.HAT,
+                CosmeticProperties.builder(CosmeticSlot.HAT).noSkinTexture().hideHeadOverlay().extraModel(Constants.id("hat"))
+                        .liftOverHelmet(2.0F));
         WHITE_HAT = cosmetic(registrar, "white_hat", CosmeticSlot.HAT,
                 CosmeticProperties.builder(CosmeticSlot.HAT).hideHeadOverlay());
         WHITE_SHIRT = cosmetic(registrar, "white_shirt", CosmeticSlot.SHIRT,

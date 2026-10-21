@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 /** Draws worn cosmetics on the player. Added to every player renderer by {@code PlayerRendererMixin}. */
@@ -36,6 +37,7 @@ public class CosmeticLayer extends RenderLayer<AbstractClientPlayer, PlayerModel
         PlayerModel<AbstractClientPlayer> model = getParentModel();
         int overlay = LivingEntityRenderer.getOverlayCoords(player, 0.0F);
         boolean slim = CosmeticRendering.isSlim(player);
+        boolean wearingHelmet = !player.getItemBySlot(EquipmentSlot.HEAD).isEmpty();
 
         // The player's own overlay may be hidden, but the cosmetic's second layer still needs those parts.
         boolean[] skinLayers = CosmeticRendering.showAllSkinLayers(model);
@@ -48,8 +50,9 @@ public class CosmeticLayer extends RenderLayer<AbstractClientPlayer, PlayerModel
                 RenderType renderType = RenderType.entityTranslucent(CosmeticRendering.skinTexture(item, slim));
                 model.renderToBuffer(poseStack, buffer.getBuffer(renderType), packedLight, overlay, -1);
             }
+            float headLift = wearingHelmet ? item.cosmetic().helmetLift() : 0.0F;
             for (ResourceLocation modelId : item.cosmetic().extraModels()) {
-                CosmeticModels.render(modelId, model, poseStack, buffer, packedLight, overlay);
+                CosmeticModels.render(modelId, stack, model, headLift, poseStack, buffer, packedLight, overlay);
             }
         }
         CosmeticRendering.restoreSkinLayers(model, skinLayers);

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.luckyowlstudios.wardrobe.Constants;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
@@ -13,6 +14,11 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,6 +35,10 @@ import java.util.function.Supplier;
  * {@code right_arm}, {@code left_arm}, {@code right_leg} and {@code left_leg} (empty is fine; {@link #humanoidMesh()}
  * gives you all of them with the player's pivots). Then call {@link #register} from client setup and add the id to a
  * cosmetic with {@code CosmeticProperties.Builder#extraModel}.
+ *
+ * <p>A model can also have a dye overlay texture. It is drawn over the base texture, tinted with the item's dye color
+ * (or untinted when undyed), the same way leather armor works. Add the item to the {@code minecraft:dyeable} tag so
+ * it can be dyed in a crafting grid.
  */
 public final class CosmeticModels {
 
@@ -36,7 +46,12 @@ public final class CosmeticModels {
     private static final Set<ResourceLocation> WARNED = new HashSet<>();
 
     public static void register(ResourceLocation id, Supplier<LayerDefinition> layer, ResourceLocation texture) {
-        MODELS.put(id, new Entry(layer, texture));
+        register(id, layer, texture, null);
+    }
+
+    public static void register(ResourceLocation id, Supplier<LayerDefinition> layer, ResourceLocation texture,
+                                @Nullable ResourceLocation dyeOverlayTexture) {
+        MODELS.put(id, new Entry(layer, texture, dyeOverlayTexture));
     }
 
     /** A mesh with the empty humanoid parts every extra model needs, pivoted where the player's parts are. */
@@ -53,8 +68,9 @@ public final class CosmeticModels {
         return mesh;
     }
 
-    static void render(ResourceLocation id, PlayerModel<AbstractClientPlayer> parent, PoseStack poseStack,
-                       MultiBufferSource buffer, int packedLight, int overlay) {
+    /** Renders an extra model posed like {@code parent}, with its head and hat parts moved up {@code headLift} pixels. */
+    static void render(ResourceLocation id, ItemStack stack, PlayerModel<AbstractClientPlayer> parent, float headLift,
+                       PoseStack poseStack, MultiBufferSource buffer, int packedLight, int overlay) {
         Entry entry = MODELS.get(id);
         if (entry == null) {
             if (WARNED.add(id)) {
@@ -64,17 +80,36 @@ public final class CosmeticModels {
         }
         HumanoidModel<AbstractClientPlayer> model = entry.model();
         parent.copyPropertiesTo(model);
+        if (headLift != 0.0F) {
+            lift(model.head, headLift);
+            lift(model.hat, headLift);
+        }
         model.renderToBuffer(poseStack, buffer.getBuffer(RenderType.entityTranslucent(entry.texture)), packedLight, overlay, -1);
+        if (entry.dyeOverlayTexture != null) {
+            int color = DyedItemColor.getOrDefault(stack, -1);
+            model.renderToBuffer(poseStack, buffer.getBuffer(RenderType.entityTranslucent(entry.dyeOverlayTexture)), packedLight, overlay, color);
+        }
+    }
+
+    /** Moves a part up along its own up axis, so it stays on top of the head however the head is turned. */
+    private static void lift(ModelPart part, float pixels) {
+        Vector3f up = new Quaternionf().rotationZYX(part.zRot, part.yRot, part.xRot).transform(new Vector3f(0.0F, -pixels, 0.0F));
+        part.x += up.x;
+        part.y += up.y;
+        part.z += up.z;
     }
 
     private static final class Entry {
         private final Supplier<LayerDefinition> layer;
         private final ResourceLocation texture;
+        @Nullable
+        private final ResourceLocation dyeOverlayTexture;
         private HumanoidModel<AbstractClientPlayer> model;
 
-        private Entry(Supplier<LayerDefinition> layer, ResourceLocation texture) {
+        private Entry(Supplier<LayerDefinition> layer, ResourceLocation texture, @Nullable ResourceLocation dyeOverlayTexture) {
             this.layer = layer;
             this.texture = texture;
+            this.dyeOverlayTexture = dyeOverlayTexture;
         }
 
         private HumanoidModel<AbstractClientPlayer> model() {

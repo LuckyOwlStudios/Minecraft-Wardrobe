@@ -18,6 +18,10 @@ import net.minecraft.world.item.ItemStack;
 /** The four cosmetic slots (laid out like the armor column) plus the player's inventory. */
 public class WardrobeMenu extends AbstractContainerMenu {
 
+    /** Screen height: 18px taller than vanilla so the "Inventory" label sits below the four cosmetic slots. */
+    public static final int HEIGHT = 184;
+    private static final int INVENTORY_Y = HEIGHT - 82;
+
     private static final int COSMETIC_END = CosmeticSlot.values().length;
     private static final int INVENTORY_END = COSMETIC_END + 27;
     private static final int HOTBAR_END = INVENTORY_END + 9;
@@ -30,11 +34,11 @@ public class WardrobeMenu extends AbstractContainerMenu {
         }
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 9; column++) {
-                addSlot(new Slot(playerInventory, column + row * 9 + 9, 8 + column * 18, 84 + row * 18));
+                addSlot(new Slot(playerInventory, column + row * 9 + 9, 8 + column * 18, INVENTORY_Y + row * 18));
             }
         }
         for (int column = 0; column < 9; column++) {
-            addSlot(new Slot(playerInventory, column, 8 + column * 18, 142));
+            addSlot(new Slot(playerInventory, column, 8 + column * 18, INVENTORY_Y + 58));
         }
     }
 

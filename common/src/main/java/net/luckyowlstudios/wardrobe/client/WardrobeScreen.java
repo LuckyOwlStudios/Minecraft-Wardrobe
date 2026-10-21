@@ -15,6 +15,8 @@ public class WardrobeScreen extends AbstractContainerScreen<WardrobeMenu> {
 
     public WardrobeScreen(WardrobeMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
+        this.imageHeight = WardrobeMenu.HEIGHT;
+        this.inventoryLabelY = this.imageHeight - 94;
         this.titleLabelX = 84;
         this.titleLabelY = 8;
     }

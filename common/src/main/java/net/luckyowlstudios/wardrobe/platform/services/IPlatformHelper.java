@@ -3,6 +3,7 @@ package net.luckyowlstudios.wardrobe.platform.services;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.CreativeModeTab;
 
 import java.util.function.BiFunction;
 
@@ -45,4 +46,7 @@ public interface IPlatformHelper {
      * transformer/widener, so it can't be called from common code.
      */
     <T extends AbstractContainerMenu> MenuType<T> createMenuType(BiFunction<Integer, Inventory, T> factory);
+
+    /** Starts a creative tab that each loader places among the other tabs itself. */
+    CreativeModeTab.Builder creativeTabBuilder();
 }
