@@ -13,6 +13,9 @@
     "entrypoints": {
         "main": [
             "net.luckyowlstudios.wardrobe.LuckysWardrobe"
+        ],
+        "client": [
+            "net.luckyowlstudios.wardrobe.LuckysWardrobeClient"
         ]
     },
     "mixins": [
@@ -26,4 +29,3 @@
         "java": ">=${java_version}"
     }
 }
-  
